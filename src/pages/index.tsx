@@ -4,7 +4,7 @@ import { Button, FormControl, FormLabel, Input, Select, TableContainer, Thead, T
 import Layout from "@/components/layout";
 
 // Listing
-interface Listing {
+export interface Listing {
   _id: number;
   name: string;
   summary: string;
