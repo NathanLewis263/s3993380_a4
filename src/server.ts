@@ -117,13 +117,24 @@ app.get('/api/listings/:id', async (req: Request, res: Response): Promise<void> 
     try {
         const database = client.db('sample_airbnb');
         const collection = database.collection('listingsAndReviews');
-        const listing = await collection.findOne({ _id: new ObjectId(id)});
+        const listing = await collection.findOne({ _id: id}, { projection: {
+            _id: 1,
+            name: 1,
+            summary: 1,
+            price: 1,
+            "review_scores.review_scores_rating": 1
+        }});
         if (!listing) {
             res.status(404).json({ message: 'Listing not found' });
             return;
         }
-        res.status(200).json(listing);
+        const formattedListing = {
+            ...listing,
+            price: Number(listing.price)
+        };
+        res.status(200).json(formattedListing);
     } catch (error) {
+        console.error('Error details:', error);
         res.status(500).json({ message: 'Error fetching listing' });
     }
 });
@@ -152,6 +163,53 @@ app.get('/api/listing/bedrooms', async (req: Request, res: Response): Promise<vo
     }
 }); 
 
+app.post('/api/booking', async (req: Request, res: Response): Promise<void> => {
+    const {listingId, startDate, checkOutDate,name, email, mobileNo, postal, residential} = req.body;
+    if (!listingId || !startDate || !checkOutDate || !name || !email || !mobileNo) {
+        res.status(400).json({ message: 'All fields are required' });
+        return;
+    }
+    if (postal != "" && residential != "" && postal.toLowerCase() == residential.toLowerCase()) {
+        res.status(400).json({ message: 'Postal and residential cannot be the same' });
+        return;
+    }
+    try {
+        const database = client.db('sample_airbnb');
+        const collection = database.collection('Bookings');
+        
+        const booking = {
+            _id: new ObjectId(),
+            listingId: listingId,
+            startDate: new Date(startDate),
+            checkOutDate: new Date(checkOutDate),
+            client: {
+                name,
+                email,
+                mobileNo,
+                postal,
+                residential
+            }
+        };
+        const result = await collection.insertOne(booking);
+        res.status(201).json({ message: 'Booking created successfully', bookingId: result.insertedId });
+    }
+    catch (error: any) {
+        console.error('Error creating booking:', error);
+        res.status(500).json({ message: 'Error creating booking', error: error.message });
+    }
+});
+
+app.get('/api/bookings/:id', async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+    try {
+        const database = client.db('sample_airbnb');
+        const collection = database.collection('Bookings');
+        const booking = await collection.findOne({ _id: new ObjectId(id) });
+        res.status(200).json(booking);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching booking' });
+    }
+});
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
