@@ -24,3 +24,32 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.header {
+  width: 100%;
+  grid-area: header;
+  background-color: black;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100px;
+}
+
+.logo {
+  font-size: 50px;
+  font-weight: bold;
+  color: white;
+  margin-left: 4px;
+  font-family: "robotoMono", sans-serif;
+  cursor: pointer;
+}
+
+.footer {
+  background-color: black;
+  color: white;
+  height: 115px;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
