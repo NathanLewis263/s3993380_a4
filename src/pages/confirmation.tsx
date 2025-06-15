@@ -80,7 +80,7 @@ const Confirmation = () => {
                 <Text fontWeight="bold">Booking ID: <span className="font-normal">{bookingId}</span></Text>
                 <Text fontWeight="bold">Check-in Date: <span className="font-normal">{booking?.startDate.split('T')[0]}</span></Text>
                 <Text fontWeight="bold">Check-out Date: <span className="font-normal">{booking?.checkOutDate.split('T')[0]}</span></Text>
-                <Text fontWeight="bold">Duration: <span className="font-normal">{duration} days</span></Text>
+                <Text fontWeight="bold">Duration: <span className="font-normal">{duration} {duration === 1 ? "day" : "days"}</span></Text>
                 <Text fontWeight="bold">Booking Status: <span className="font-normal">Confirmed</span></Text>
                 <Text fontWeight="bold">Booking Amount: <span className="font-normal">${price}</span></Text>
                 <Text fontWeight="bold">Booking Payment Status: <span className="font-normal">Paid</span></Text>

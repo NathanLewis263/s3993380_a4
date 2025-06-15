@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { Button, FormControl, FormLabel, Input, Select, TableContainer, Thead, Th, Tr, Table, Tbody, Td, Spinner, Link, Text } from "@chakra-ui/react";
 import Layout from "@/components/layout";
+import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 
 // Listing
 export interface Listing {
@@ -97,36 +98,20 @@ export default function Home() {
   };
 
   // Memoize the table
-  const tableRows = useMemo(() => {
+  const tableCards = useMemo(() => {
     return listings.map((listing) => (
-      <Tr key={listing._id}>
-        <Td whiteSpace="normal" wordBreak="break-word">
-            <Link href={`/booking?listing_id=${listing._id}`}  _hover={{color: "blue"}}>{listing.name}</Link>
-          </Td>
-        <Td whiteSpace="normal" wordBreak="break-word">{listing.summary}</Td>
-        <Td>${listing.price}</Td>
-        <Td>{listing.review_scores.review_scores_rating || "N/A"}</Td>
-      </Tr>
+      <Card key={listing._id} width={"100%"} height={"100%"}>
+        <CardHeader>
+          <Link href={`/booking?listing_id=${listing._id}`} color={"blue"} fontWeight={"bold"} fontSize={"30px"}>{listing.name}</Link>
+        </CardHeader>
+        <CardBody className="flex flex-col gap-2">
+          <Text fontSize={"16px"} fontWeight={"bold"}>Summary: <span className="font-normal">{listing.summary}</span></Text>
+          <Text fontSize={"16px"} fontWeight={"bold"}>Daily Rate: <span className="font-normal">${listing.price}</span></Text>
+          <Text fontSize={"16px"} fontWeight={"bold"}>Rating: <span className="font-normal">{listing.review_scores.review_scores_rating || "N/A"}</span></Text>
+        </CardBody>
+      </Card>
     ));
   }, [listings]);
-
-  // Memoize the property type options
-  const propertyTypeOptions = useMemo(() => {
-    return propertyTypes.map((type) => (
-      <option key={type} value={type}>
-        {type}
-      </option>
-    ));
-  }, [propertyTypes]);
-
-  // Memoize the bedroom options
-  const bedroomOptions = useMemo(() => {
-    return bedroomsOptions.map((option) => (
-      <option key={option} value={option}>
-        {option} bedrooms
-      </option>
-    ));
-  }, [bedroomsOptions]);
 
   return (
     <Layout centerMain={false}>
@@ -139,14 +124,22 @@ export default function Home() {
             <FormLabel>Property Type</FormLabel>
             <Select onChange={(e) => setPropertyType(e.target.value)}>
               <option key="all" value="">All property types</option>
-              {propertyTypeOptions}
+              {propertyTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
             </Select>
           </FormControl>
           <FormControl>
             <FormLabel>Number of bedrooms</FormLabel>
             <Select onChange={(e) => setBedrooms(e.target.value === "any" ? null : Number(e.target.value))}>
               <option key="any" value="any" >Any number of bedrooms</option>
-              {bedroomOptions}
+              {bedroomsOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option} bedrooms
+                </option>
+              ))}
             </Select>
           </FormControl>
         </div>
@@ -164,22 +157,10 @@ export default function Home() {
             </div>
           ) : (
           <div className="mt-10 ml-10 mr-10">
-            <TableContainer maxW="100%" overflowX="auto">
               {listingsFound !== null && <Text fontSize={"20px"} fontWeight={"bold"} className="flex justify-center">{listingsFound} listings found that match your preferences</Text>}
-              <Table variant="simple" size="sm" className="mt-10">
-                <Thead>
-                  <Tr>
-                    <Th fontSize={"20px"} fontWeight={"bold"} width="30%">Property name</Th>
-                    <Th fontSize={"20px"} fontWeight={"bold"} width="50%">Summary</Th>
-                    <Th fontSize={"20px"} fontWeight={"bold"} width="10%">Daily Rate</Th>
-                    <Th fontSize={"20px"} fontWeight={"bold"} width="10%">Rating</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {tableRows}
-                </Tbody>
-              </Table>
-            </TableContainer>
+              <div className="flex flex-row flex-wrap gap-4 mt-10 mb-10">
+                {tableCards}
+              </div>
           </div>
         )}
     </Layout>

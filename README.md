@@ -1,40 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Sample Airbnb Booking Application (By Nathan - s3993380)
+
+A full-stack booking application built with React, Express.js, and MongoDB, utilizing the sample_airbnb data model. It uses the listingsAndReviews collection to display available listings and uses the bookings collection which uses the referencing model to store and display bookings made by users. The client information is embedded in the booking collection.
+
+## Project Structure
+
+The project is divided into two main parts:
+
+### Backend
+- Built with Express.js
+- Runs on port 3001
+- Handles API requests and database operations
+- Uses MongoDB for data storage
+- Implements RESTful API endpoints
+
+### Frontend
+- Built with React and Next.js
+- Runs on port 3000
+- Uses Chakra UI for styling
+- Consists of three main pages:
+  - Home page (listings)
+  - Booking page
+  - Confirmation page
 
 ## Getting Started
 
-First, run the development server:
-
+1. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Start the backend server:
+Runs on port 3001
+```bash
+npm run dev:server
+```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+3. Start the frontend server:
+Runs on port 3000
+```bash
+cd ..
+npm run dev
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## API Endpoints
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- `GET /api/listings` - Get all listings
+- `POST /api/listings/filter` - Filter listings based on location. Number of bedrooms and property type are optional filter options
+- `GET /api/listings/:id` - Get specific listing 
+- `GET /api/listing/property-types` - Get property types
+- `GET /api/listing/bedrooms` - Get bedroom options
+- `POST /api/booking` - Create booking
+- `GET /api/bookings/:id` - Get booking details
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Data Model
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+The application uses two main collections:
+- `listingsAndReviews`: Stores details about a listing
+- `Bookings`: Stores booking information with references to listings and embeds client information

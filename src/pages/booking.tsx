@@ -20,6 +20,16 @@ const Booking = () => {
     const [postal, setPostal] = useState("");
     const [residential, setResidential] = useState("");
 
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const validatePhone = (phone: string) => {
+        const phoneRegex = /^\d{10}$/;
+        return phoneRegex.test(phone);
+    };
+
     const handleSubmit = async () => {
         if (!checkInDate || !checkOutDate) {
             setError("Please select both check-in and check-out dates");
@@ -36,7 +46,16 @@ const Booking = () => {
         if (name == "" || email == "" || mobileNo == "") {
             setError("Please fill in all fields");
             return;
-        } else {
+        }
+        if (!validateEmail(email)) {
+            setError("Please enter a valid email address");
+            return;
+        }
+        if (!validatePhone(mobileNo)) {
+            setError("Please enter a valid 10-digit phone number");
+            return;
+        }
+        else {
             setError("");
             try {
                 setLoading(true);
@@ -129,6 +148,16 @@ const Booking = () => {
         }
     };
 
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newEmail = e.target.value;
+        setEmail(newEmail);
+    };
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newPhone = e.target.value;
+        setMobileNo(newPhone);
+    };
+
     return (
         <Layout centerMain={false}>
             <div className="flex flex-col items-center justify-center">
@@ -144,6 +173,7 @@ const Booking = () => {
                             width="100%"
                             min={new Date().toISOString().split('T')[0]}
                             placeholder="Check in date"
+                            opacity={!checkInDate ? 0.5 : 1}
                         />
                         <FormLabel marginTop={4} textAlign="left">Check out:</FormLabel>
                         <Input
@@ -153,6 +183,7 @@ const Booking = () => {
                             width="100%"
                             min={checkInDate ? checkInDate : new Date().toISOString().split('T')[0]}
                             placeholder="Check out date"
+                            opacity={!checkOutDate ? 0.5 : 1}
                         />
                     </div>
                     <FormErrorMessage>{dateError}</FormErrorMessage>
@@ -174,7 +205,7 @@ const Booking = () => {
                         <Input
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleEmailChange}
                             width="100%"
                             isRequired
                             placeholder="Email (required)"
@@ -183,10 +214,10 @@ const Booking = () => {
                         <Input
                             type="tel"
                             value={mobileNo}
-                            onChange={(e) => setMobileNo(e.target.value)}
+                            onChange={handlePhoneChange}
                             width="100%"
                             isRequired
-                            placeholder="Mobile No (04xxxx xxx xxx) (required)"
+                            placeholder="Mobile No (10 digits) (required)"
                         />
                         <FormLabel textAlign="left" marginTop={4}>Postal address:</FormLabel>
                         <Input
