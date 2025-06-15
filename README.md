@@ -38,7 +38,6 @@ npm run dev:server
 3. Start the frontend server:
 Runs on port 3000
 ```bash
-cd ..
 npm run dev
 ```
 
